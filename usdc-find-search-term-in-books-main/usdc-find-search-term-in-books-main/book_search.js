@@ -26,7 +26,22 @@
         "SearchTerm": "",
         "Results": []
     };
-    
+    result["SearchTerm"] = searchTerm;
+    for(var bookNum = 0; bookNum < scannedTextObj.length; bookNum++) {
+        for (var contentNum = 0; contentNum < scannedTextObj[bookNum].Content.length; contentNum++) {
+
+            if (JSON.stringify(scannedTextObj[0].Content[contentNum].Text).includes(searchTerm)) {
+
+                result.Results.push({
+                    "ISBN": scannedTextObj[bookNum].ISBN,
+                    "Page": scannedTextObj[bookNum].Content[contentNum].Page,
+                    "Line": scannedTextObj[bookNum].Content[contentNum].Line
+                });
+                
+            }
+
+        }
+    }   
     return result; 
 }
 
