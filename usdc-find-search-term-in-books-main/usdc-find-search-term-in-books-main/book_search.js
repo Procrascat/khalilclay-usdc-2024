@@ -21,12 +21,15 @@
  function findSearchTermInBooks(searchTerm, scannedTextObj) {
     /** You will need to implement your search and 
      * return the appropriate object here. */
+    if(searchTerm == "" || scannedTextObj == null)
+        return null;
 
     var result = {
         "SearchTerm": "",
         "Results": []
     };
     result["SearchTerm"] = searchTerm;
+    
     for(var bookNum = 0; bookNum < scannedTextObj.length; bookNum++) {
         for (var contentNum = 0; contentNum < scannedTextObj[bookNum].Content.length; contentNum++) {
 
@@ -117,3 +120,35 @@ if (test2result.Results.length == 1) {
     console.log("Expected:", twentyLeaguesOut.Results.length);
     console.log("Received:", test2result.Results.length);
 }
+
+/** 
+ * POSITIVE TESTS
+*/
+
+/** Test 3: Checking for two empty inputs*/
+const test3result = findSearchTermInBooks("", null);
+if (test3result === null) {
+    console.log("PASS: Test 3");
+} else {
+    console.log("FAIL: Test 3");
+    console.log("Expected:", null);
+    console.log("Received:", test3result);
+}
+
+/** Test 4: Given a known input on multiple lines we get results on multiple lines as well */
+const test4result = findSearchTermInBooks("w", twentyLeaguesIn); 
+if (test4result.Results.length == 3) {
+    console.log("PASS: Test 4");
+} else {
+    console.log("FAIL: Test 4");
+    console.log("Expected:", 3);
+    console.log("Received:", test4result.Results.length);
+}
+
+/** 
+ * NEGATIVE TESTS
+*/
+
+/** 
+ * CASE SENSITIVE TESTS
+*/
