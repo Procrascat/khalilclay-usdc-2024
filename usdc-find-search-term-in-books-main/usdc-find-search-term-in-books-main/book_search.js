@@ -125,15 +125,7 @@ if (test2result.Results.length == 1) {
  * POSITIVE TESTS
 */
 
-/** Test 3: Checking for two empty inputs*/
-const test3result = findSearchTermInBooks("", null);
-if (test3result === null) {
-    console.log("PASS: Test 3");
-} else {
-    console.log("FAIL: Test 3");
-    console.log("Expected:", null);
-    console.log("Received:", test3result);
-}
+
 
 /** Test 4: Given a known input on multiple lines we get results on multiple lines as well */
 const test4result = findSearchTermInBooks("w", twentyLeaguesIn); 
@@ -145,10 +137,50 @@ if (test4result.Results.length == 3) {
     console.log("Received:", test4result.Results.length);
 }
 
+
 /** 
  * NEGATIVE TESTS
 */
 
+/** Test 3: Checking for two empty inputs*/
+const test3result = findSearchTermInBooks("", null);
+if (test3result === null) {
+    console.log("PASS: Test 3");
+} else {
+    console.log("FAIL: Test 3");
+    console.log("Expected:", null);
+    console.log("Received:", test3result);
+}
+
+/** Test 5: Checking for empty search term input*/
+const test5result = findSearchTermInBooks("", twentyLeaguesIn);
+if (test5result === null) {
+    console.log("PASS: Test 5");
+} else {
+    console.log("FAIL: Test 5");
+    console.log("Expected:", null);
+    console.log("Received:", test5result);
+}
+
+/** Test 6: Checking for empty book input*/
+const test6result = findSearchTermInBooks("", null);
+if (test6result === null) {
+    console.log("PASS: Test 6");
+} else {
+    console.log("FAIL: Test 6");
+    console.log("Expected:", null);
+    console.log("Received:", test6result);
+}
+
 /** 
  * CASE SENSITIVE TESTS
 */
+/** Given a known uppercase input, the Line output should not equal the Line output of a lowercase input */
+const test7result = findSearchTermInBooks("The", twentyLeaguesIn); 
+if (JSON.stringify(test7result.Results[0].Line) != JSON.stringify(twentyLeaguesOut.Results[0].Line)) {
+    console.log("PASS: Test 7");
+} else {
+    console.log("FAIL: Test 7");
+    console.log("Expected:", JSON.stringify(twentyLeaguesOut.Results[0].Line));
+    console.log("Received:", JSON.stringify(test7result.Results[0].Line));
+}
