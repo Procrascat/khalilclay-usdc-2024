@@ -12,7 +12,35 @@
  * under the hamburger (three horizontal lines), also hidden under "More Tools." 
  */
 
-/**
+
+ /**
+ * Checks that each JSON is formated to be a book and if the book's non-empty contents have phrases.
+ * @param {JSON} scannedTextObj - A JSON object representing the scanned text.
+ * @returns {boolean} - returns true if JSON is a book and false if it is not.
+ * */    
+ function checkBookIntegrity(scannedTextObj) {
+    for(var bookNum = 0; bookNum < scannedTextObj.length; bookNum++) {
+        if(!scannedTextObj[bookNum].hasOwnProperty("Title") || !scannedTextObj[bookNum].hasOwnProperty("ISBN") ||
+            !scannedTextObj[bookNum].hasOwnProperty("Content")) {
+
+                return false
+
+        }
+        for (var contentNum = 0; contentNum < scannedTextObj[bookNum].Content.length; contentNum++) {
+
+            
+
+            if(!scannedTextObj[bookNum].Content[contentNum].hasOwnProperty("Page") || 
+                !scannedTextObj[bookNum].Content[contentNum].hasOwnProperty("Line") || 
+                !scannedTextObj[bookNum].Content[contentNum].hasOwnProperty("Text"))
+                    return false;
+                
+        }
+    }
+    return true;
+ }
+
+ /**
  * Searches for matches in scanned text.
  * @param {string} searchTerm - The word or term we're searching for. 
  * @param {JSON} scannedTextObj - A JSON object representing the scanned text.
@@ -22,6 +50,9 @@
     /** You will need to implement your search and 
      * return the appropriate object here. */
     if(searchTerm == "" || scannedTextObj == null)
+        return null;
+
+    if(!checkBookIntegrity(scannedTextObj))
         return null;
 
     var result = {
@@ -40,7 +71,7 @@
                     "Page": scannedTextObj[bookNum].Content[contentNum].Page,
                     "Line": scannedTextObj[bookNum].Content[contentNum].Line
                 });
-                console.log(scannedTextObj[bookNum].Content[contentNum].Line);
+                
             }
 
         }
@@ -85,6 +116,7 @@ const twentyLeaguesOut = {
     ]
 }
 
+/** Multi-book example*/
 const twoBooksIn = [
     {
         "Title": "How to Make a Various Cakes Vol. 1",
@@ -138,8 +170,16 @@ const twoBooksIn = [
 
     
 ]
-
-
+/**Broken book example */
+const brokenBookIn = [
+    {
+        "Bad Title": "Corrupted Book",
+        "ISBN": "000000000000000",
+        "Content": [
+            
+        ]
+    }
+]
 const twoBooks1Out = {
     "SearchTerm": "cake",
     "Results": [
@@ -210,7 +250,7 @@ if (test2result.Results.length == 1) {
 
 
 
-/** Test 3: Given a known input on multiple lines we get results on multiple lines as well */
+/** Test 3: Given a known input on multiple lines we get results from multiple lines as well */
 const test3result = findSearchTermInBooks("w", twentyLeaguesIn); 
 if (test3result.Results.length == 3) {
     console.log("PASS: Test 3");
@@ -220,7 +260,7 @@ if (test3result.Results.length == 3) {
     console.log("Received:", test3result.Results.length);
 }
 
-/** Test 3: Given a known input on multiple lines we get results on multiple lines as well */
+/** Test 4: Given a known input on multiple lines and books we get results from multiple lines and booksas well */
 const test4result = findSearchTermInBooks("cake", twoBooksIn); 
 if (test4result.Results.length == 2) {
     console.log("PASS: Test 3");
@@ -230,7 +270,7 @@ if (test4result.Results.length == 2) {
     console.log("Received:", test4result.Results.length);
 }
 
-/** Test 3: Given a known input on multiple lines we get results on multiple lines as well */
+/** Test 5: Given a known input with punctuation on one line we get results on that line as well */
 const test5result = findSearchTermInBooks("McCormic's", twoBooksIn); 
 if (test5result.Results.length == 1) {
     console.log("PASS: Test 5");
@@ -240,7 +280,7 @@ if (test5result.Results.length == 1) {
     console.log("Received:", test5result.Results.length);
 }
 
-/** Test 3: Given a known input on multiple lines we get results on multiple lines as well */
+/** Test 6: Given a known space input on multiple lines we get results on multiple lines as well */
 const test6result = findSearchTermInBooks(" ", twoBooksIn); 
 if (test6result.Results.length == 6) {
     console.log("PASS: Test 6");
@@ -255,7 +295,7 @@ if (test6result.Results.length == 6) {
  * NEGATIVE TESTS
 */
 
-/** Test 4: Checking for two empty inputs*/
+/** Test 7: Checking for two empty inputs*/
 const test7result = findSearchTermInBooks("", null);
 if (test7result === null) {
     console.log("PASS: Test 7");
@@ -265,7 +305,7 @@ if (test7result === null) {
     console.log("Received:", test7result);
 }
 
-/** Test 5: Checking for empty search term input*/
+/** Test 8: Checking for empty search term input*/
 const test8result = findSearchTermInBooks("", twentyLeaguesIn);
 if (test7result === null) {
     console.log("PASS: Test 8");
@@ -275,8 +315,8 @@ if (test7result === null) {
     console.log("Received:", test8result);
 }
 
-/** Test 6: Checking for empty book input*/
-const test9result = findSearchTermInBooks("", null);
+/** Test 9: Checking for empty book input*/
+const test9result = findSearchTermInBooks("blank", null);
 if (test9result === null) {
     console.log("PASS: Test 9");
 } else {
@@ -285,47 +325,54 @@ if (test9result === null) {
     console.log("Received:", test9result);
 }
 
-
-
-/** 
- * CASE SENSITIVE TESTS
-*/
-/** Given an uppercase search term input, the Line output should not equal the Line output of a lowercase input */
-const test10result = findSearchTermInBooks("The", twentyLeaguesIn); 
-if (JSON.stringify(test10result.Results[0].Line) != JSON.stringify(twentyLeaguesOut.Results[0].Line)) {
+/**Test 10: Checking for book integrity*/
+const test10result = findSearchTermInBooks("blank", brokenBookIn);
+if (test10result === null) {
     console.log("PASS: Test 10");
 } else {
     console.log("FAIL: Test 10");
-    console.log("Expected:", JSON.stringify(twentyLeaguesOut.Results[0].Line));
-    console.log("Received:", JSON.stringify(test10result.Results[0].Line));
+    console.log("Expected:", null);
+    console.log("Received:", test10result);
 }
-
-/** Given an uppercase search term input, the Line output should not equal the Line output of a lowercase input */
-const test11result = findSearchTermInBooks("cake", twoBooksIn); 
-if (test11result.Results.length == twoBooks1Out.Results.length) {
+/** 
+ * CASE SENSITIVE TESTS
+*/
+/**Test 11: Given a standard uppercase search term input, the Line output should not equal the Line output of a lowercase input */
+const test11result = findSearchTermInBooks("The", twentyLeaguesIn); 
+if (JSON.stringify(test11result.Results[0].Line) != JSON.stringify(twentyLeaguesOut.Results[0].Line)) {
     console.log("PASS: Test 11");
 } else {
     console.log("FAIL: Test 11");
-    console.log("Expected:", twoBooks1Out.Results.length);
-    console.log("Received:", test11result.Results.length);
+    console.log("Expected:", JSON.stringify(twentyLeaguesOut.Results[0].Line));
+    console.log("Received:", JSON.stringify(test11result.Results[0].Line));
 }
 
-/** Given an uppercase search term input, the Line output should not equal the Line output of a lowercase input */
-const test12result = findSearchTermInBooks("Cake", twoBooksIn); 
-if (test12result.Results.length == twoBooks2Out.Results.length) {
+/**Test 12: Given a lowercase search term input, the results should equal the results of a lowercase input */
+const test12result = findSearchTermInBooks("cake", twoBooksIn); 
+if (test12result.Results.length == twoBooks1Out.Results.length) {
     console.log("PASS: Test 12");
 } else {
     console.log("FAIL: Test 12");
-    console.log("Expected:", twoBooks2Out.Results.length);
+    console.log("Expected:", twoBooks1Out.Results.length);
     console.log("Received:", test12result.Results.length);
 }
 
-/** Given an uppercase search term input, the Line output should not equal the Line output of a lowercase input */
-const test13result = findSearchTermInBooks("CaKe", twoBooksIn); 
-if (test13result.Results.length == 0) {
+/**Test 13: Given an uppercase search term input, the results should equal the results of an uppercase input */
+const test13result = findSearchTermInBooks("Cake", twoBooksIn); 
+if (test13result.Results.length == twoBooks2Out.Results.length) {
     console.log("PASS: Test 13");
 } else {
     console.log("FAIL: Test 13");
+    console.log("Expected:", twoBooks2Out.Results.length);
+    console.log("Received:", test13result.Results.length);
+}
+
+/**Test 14: Given a randomly uppercased search term input, the results should return no lines being found since the string does not exist in any book*/
+const test14result = findSearchTermInBooks("CaKe", twoBooksIn); 
+if (test14result.Results.length == 0) {
+    console.log("PASS: Test 14");
+} else {
+    console.log("FAIL: Test 14");
     console.log("Expected:", 0);
-    console.log("Received:", test12result.Results.length);
+    console.log("Received:", test14result.Results.length);
 }
