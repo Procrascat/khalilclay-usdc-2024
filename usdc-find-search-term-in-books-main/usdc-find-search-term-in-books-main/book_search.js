@@ -49,6 +49,9 @@
  function findSearchTermInBooks(searchTerm, scannedTextObj) {
     /** You will need to implement your search and 
      * return the appropriate object here. */
+
+    if(typeof searchTerm != 'string' || typeof scannedTextObj !== 'object')
+        return null;
     if(searchTerm == "" || scannedTextObj == null)
         return null;
 
@@ -334,45 +337,65 @@ if (test10result === null) {
     console.log("Expected:", null);
     console.log("Received:", test10result);
 }
-/** 
- * CASE SENSITIVE TESTS
-*/
-/**Test 11: Given a standard uppercase search term input, the Line output should not equal the Line output of a lowercase input */
-const test11result = findSearchTermInBooks("The", twentyLeaguesIn); 
-if (JSON.stringify(test11result.Results[0].Line) != JSON.stringify(twentyLeaguesOut.Results[0].Line)) {
+
+/**Test 11: Checking search term for string type*/
+const test11result = findSearchTermInBooks(54, twoBooksIn);
+if (test11result === null) {
     console.log("PASS: Test 11");
 } else {
     console.log("FAIL: Test 11");
-    console.log("Expected:", JSON.stringify(twentyLeaguesOut.Results[0].Line));
-    console.log("Received:", JSON.stringify(test11result.Results[0].Line));
+    console.log("Expected:", null);
+    console.log("Received:", test11result);
 }
 
-/**Test 12: Given a lowercase search term input, the results should equal the results of a lowercase input */
-const test12result = findSearchTermInBooks("cake", twoBooksIn); 
-if (test12result.Results.length == twoBooks1Out.Results.length) {
+/**Test 12: Checking book for JSON object type*/
+const test12result = findSearchTermInBooks("blank", 12);
+if (test12result === null) {
     console.log("PASS: Test 12");
 } else {
     console.log("FAIL: Test 12");
-    console.log("Expected:", twoBooks1Out.Results.length);
-    console.log("Received:", test12result.Results.length);
+    console.log("Expected:", null);
+    console.log("Received:", test12result);
 }
-
-/**Test 13: Given an uppercase search term input, the results should equal the results of an uppercase input */
-const test13result = findSearchTermInBooks("Cake", twoBooksIn); 
-if (test13result.Results.length == twoBooks2Out.Results.length) {
+/** 
+ * CASE SENSITIVE TESTS
+*/
+/**Test 13: Given a standard uppercase search term input, the Line output should not equal the Line output of a lowercase input */
+const test13result = findSearchTermInBooks("The", twentyLeaguesIn); 
+if (JSON.stringify(test13result.Results[0].Line) != JSON.stringify(twentyLeaguesOut.Results[0].Line)) {
     console.log("PASS: Test 13");
 } else {
     console.log("FAIL: Test 13");
-    console.log("Expected:", twoBooks2Out.Results.length);
-    console.log("Received:", test13result.Results.length);
+    console.log("Expected:", JSON.stringify(twentyLeaguesOut.Results[0].Line));
+    console.log("Received:", JSON.stringify(test13result.Results[0].Line));
 }
 
-/**Test 14: Given a randomly uppercased search term input, the results should return no lines being found since the string does not exist in any book*/
-const test14result = findSearchTermInBooks("CaKe", twoBooksIn); 
-if (test14result.Results.length == 0) {
+/**Test 14: Given a lowercase search term input, the results should equal the results of a lowercase input */
+const test14result = findSearchTermInBooks("cake", twoBooksIn); 
+if (test14result.Results.length == twoBooks1Out.Results.length) {
     console.log("PASS: Test 14");
 } else {
     console.log("FAIL: Test 14");
-    console.log("Expected:", 0);
+    console.log("Expected:", twoBooks1Out.Results.length);
     console.log("Received:", test14result.Results.length);
+}
+
+/**Test 15: Given an uppercase search term input, the results should equal the results of an uppercase input */
+const test15result = findSearchTermInBooks("Cake", twoBooksIn); 
+if (test15result.Results.length == twoBooks2Out.Results.length) {
+    console.log("PASS: Test 15");
+} else {
+    console.log("FAIL: Test 15");
+    console.log("Expected:", twoBooks2Out.Results.length);
+    console.log("Received:", test15result.Results.length);
+}
+
+/**Test 16: Given a randomly uppercased search term input, the results should return no lines being found since the string does not exist in any book*/
+const test16result = findSearchTermInBooks("CaKe", twoBooksIn); 
+if (test16result.Results.length == 0) {
+    console.log("PASS: Test 16");
+} else {
+    console.log("FAIL: Test 16");
+    console.log("Expected:", 0);
+    console.log("Received:", test16result.Results.length);
 }
